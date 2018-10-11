@@ -3,7 +3,7 @@
 
 struct PolynomialAnalysis <: NumericalData
     expr::Any
-    set::Range
+    set::AbstractRange
     val::Tuple
     stj::Tuple
     smp::Number
@@ -29,7 +29,7 @@ show(io::IO, ::MIME"text/plain", x::PolynomialAnalysis) = print(io,x)
 
 struct PolynomialComparison <: NumericalData
     expr::Any
-    set::Range
+    set::AbstractRange
     results::Array{PolynomialAnalysis,1}
     extra::Bool
     rxtra::Bool
@@ -43,7 +43,7 @@ struct PolynomialComparison <: NumericalData
         rr = Reduce.Rational()
         Reduce.Rational(false)
         #j = squash(expr)
-        exprs = Array{Any,1}(5)
+        exprs = Array{Any,1}(undef,5)
         rof = round ? [:rounded] : []
         exprs[1] = j |> optimal             #ea
         exprs[2] = rcall(j,:expand,rof...)  #ee
@@ -58,7 +58,7 @@ struct PolynomialComparison <: NumericalData
         stj = [stieltjes(set,expr,T;logi=logi,expi=expi) for expr ∈ exprs[2:end]]
         ω = min(Ω.([stj[1][1],stj[2][1],stj[3][1]])...)
         res=[PolynomialAnalysis(exprs[k+1],(T,),set,ω,stj[k];logi=logi,expi=expi) for k ∈ 1:length(stj)]
-        unshift!(res,PolynomialAnalysis(exprs[1],(BigFloat,T),set,ω;logi=logi,expi=expi))
+        pushfirst!(res,PolynomialAnalysis(exprs[1],(BigFloat,T),set,ω;logi=logi,expi=expi))
         EE = exacterr(set,exprs,T,rxtra,extra;logi=logi,expi=expi)
         s = [simpson(set,r,ω) for r ∈ EE]
         #(res[2], res[3], res[4]) = (res[2]-res[1], res[3]-res[1], res[4]-res[1])
@@ -104,7 +104,7 @@ function plot(x::PolynomialComparison)
     leg = ["expand (bound)","horner (bound)","factor (bound)"]
     if x.rxtra
         plot(sc,x.exact[4]-x.results[1].stj[1],c="y",marker="o",ms=2,ls="--",lw=0.7)
-        unshift!(leg,"approx (bound)")
+        pushfirst!(leg,"approx (bound)")
         push!(leg,"approx (actual)")
     end
     if x.extra

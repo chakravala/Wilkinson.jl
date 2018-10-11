@@ -21,30 +21,30 @@ end
 genabs(expr,T::DataType) = SyntaxTree.genfun(SyntaxTree.abs(SyntaxTree.sub(T,expr)),[:x])
 genalg(expr,T::DataType) = SyntaxTree.genfun(SyntaxTree.sub(T,expr),[:x])
 
-function stieltjes(set::Range,expr,T::DataType,T2::DataType=T;logi=log,expi=exp)
+function stieltjes(set::AbstractRange,expr,T::DataType,T2::DataType=T;logi=log,expi=exp)
     t = genabs(expr,T)
     sc = collect(set)
     esc = expi.(sc)
     #@timed t.([0,1])
     te = (@timed p = t.(esc))[3]
-    return Float64.((logi.(abs.(p))-sc)+logi(callcount(expr)*eps(T2))), te
+    return Float64.((logi.(abs.(p))-sc).+logi(callcount(expr)*eps(T2))), te
 end
 
-function simpson(set::Range,p::Array{<:Number,1},n::Int=Ω(p))
+function simpson(set::AbstractRange,p::Array{<:Number,1},n::Int=Ω(p))
     s = 4sum(p[1:2:n-1])+2sum(p[2:2:n-1])+sum(p[[1,n]])
     r = -(collect(set)[[n,1]]...)
     #println("Ω = $(collect(set)[n])")
     return s/(3n*r)
 end
 
-function exacterr(set::Range,expr::Array{<:Any,1},T::DataType,rx::Bool,ex::Bool;logi=log,expi=exp)
+function exacterr(set::AbstractRange,expr::Array{<:Any,1},T::DataType,rx::Bool,ex::Bool;logi=log,expi=exp)
     funs = genalg.(expr[2:end],T)
     push!(funs,genalg(expr[1],BigFloat))
     esc = collect(set)
     sc = expi.(esc)
     bs = funs[end].(sc)
     bsa = abs.(bs)
-    out = Array{Array{Float64,1},1}(length(funs)-1)
+    out = Array{Array{Float64,1},1}(undef,length(funs)-1)
     for q ∈ 1:length(funs)-1
         out[q] = Float64.(logi.(abs.(bs-funs[q].(sc)))-esc)
     end

@@ -6,7 +6,9 @@ module NumericalAnalysis
 using SyntaxTree, Reduce, NumericalBasis, PyPlot
 import Base: print, show
 import PyPlot: plot
-export PolynomialAnalysis, PolynomialComparison, plot
+import Reduce: factor, expand, horner
+import NumericalBasis: polyfactors, polyexpand, polyhorner
+export PolynomialAnalysis, PolynomialComparison, plot, factor, expand, horner, polyfactors, polyexpand, polyhorner
 
 geonorm(x) = 1/(1-x)
 

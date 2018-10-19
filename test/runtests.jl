@@ -1,9 +1,4 @@
-using NumericalAnalysis
-@static if VERSION < v"0.7.0-DEV.2005"
-    using Base.Test
-else
-    using Test
-end
+using NumericalAnalysis, Test
 
 # write your own tests here
-@test 1 == 2
+@test PolynomialAnalysis(:(x^9-2)).val == PolynomialAnalysis(:((x-2)^9)).val

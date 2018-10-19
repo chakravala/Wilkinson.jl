@@ -4,5 +4,11 @@ uuid = "c220c75b-21ae-5211-b484-b1b73160f1eb"
 [deps]
 SyntaxTree = "a4af3ec5-f8ac-5fed-a759-c2e80b4d74cb"
 Reduce = "93e0c654-6965-5f22-aba9-9c1ae6b3c259"
-NumericalBasis = "97692d93-9c56-5693-a6fc-ebc8780cb089"
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

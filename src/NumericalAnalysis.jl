@@ -3,12 +3,14 @@ module NumericalAnalysis
 #   This file is part of NumericalAnalysis.jl. It is licensed under the MIT license
 #   Copyright (C) 2018 Michael Reed
 
-using SyntaxTree, Reduce, PyPlot
+using SyntaxTree, Reduce, PyPlot, Printf
 import Base: print, show
 import PyPlot: plot
 import Reduce: factor, expand, horner
 #import NumericalBasis: polyfactors, polyexpand, polyhorner
 export PolynomialAnalysis, PolynomialComparison, plot, factor, expand, horner, polyfactors, polyexpand, polyhorner
+
+## NumericalBasis
 
 function floatset(T::DataType,N;scale=x->x)
     l = scale(eps(T))
@@ -24,6 +26,21 @@ polyfactors(x,a::Array{<:Any,1},k) = k==length(a) ? Algebra.:-(x,a[k]) : Algebra
 
 polyexpand(x,a) = polyexpand(x,a,length(a))
 polyexpand(x,a::Array{<:Any,1},k) = k==1 ? a[k] : Algebra.:+(Algebra.:*(a[k],Algebra.:^(x,k-1)),polyexpand(x,a,k-1))
+
+function optimal(expr)
+    h = horner(expr)
+    f = factor(h)
+    eh = SyntaxTree.exprval(h)[1]
+    ef = SyntaxTree.exprval(f)[1]
+    eo = SyntaxTree.exprval(expr)[1]
+    if eh ≤ ef
+        return eh ≤ eo ? h : expr
+    else
+        return ef ≤ eo ? f : expr
+    end
+end
+
+## NumericalBasis
 
 geonorm(x) = 1/(1-x)
 

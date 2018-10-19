@@ -18,10 +18,10 @@ end
 
 function print(io::IO,x::PolynomialAnalysis)
     display(RExpr(x.expr)); println()
-    println(io,"characteristic values: $(x.val[2:5])")
-    println(io,"expression value: $(x.val[1])")
-    println(io,"predicted error bound: $(x.smp)")
-    println(io,"renormalized error bound: $(geonorm(x.smp))")
+    println(io,"characteristic values (c,σ,s,p): $(x.val[2:5])")
+    println(io,"expression value ν: $(x.val[1])")
+    println(io,"predicted error bound ϕ: $(x.smp)")
+    #println(io,"renormalized error bound: $(geonorm(x.smp))")
     println(io,"bytes allocated: $(x.stj[2]/length(x.set))")
 end
 
@@ -38,6 +38,7 @@ struct PolynomialComparison <: NumericalData
     integral::Array
     log::Function
     exp::Function
+    typ::DataType
     function PolynomialComparison(j,T::DataType=Float64,N::Int=3000;logi=log,expi=exp,round=false)
         set = floatset(T,N;scale=logi)
         rr = Reduce.Rational()
@@ -63,7 +64,7 @@ struct PolynomialComparison <: NumericalData
         s = [simpson(set,r,ω) for r ∈ EE]
         #(res[2], res[3], res[4]) = (res[2]-res[1], res[3]-res[1], res[4]-res[1])
         #(EE[2], EE[3], EE[4]) = (EE[2]-res[1], EE[3]-res[1], EE[4]-res[1])
-        return new(j,set,res,extra,rxtra,ω,EE,s,logi,expi)
+        return new(j,set,res,extra,rxtra,ω,EE,s,logi,expi,T)
     end
 end
 
@@ -73,21 +74,21 @@ function print(io::IO, x::PolynomialComparison)
     x.rxtra && push!(n,"r")
     x.extra && push!(n,"o")
     L = 1:length(n)
-    println(io,"characteristic values:")
+    println(io,"characteristic values (c,σ,s,p):")
     [println(io,"$(n[k]) = ",x.results[k+1].val[2:5]) for k ∈ L]
-    println(io,"expression value:")
+    println(io,"expression value ν:")
     [println(io,"$(n[k]) = $(x.results[k+1].val[1])") for k ∈ L]
-    println(io,"predicted error bound:")
+    println(io,"predicted error bound Φ:")
     [println(io,"$(n[k]) = $(x.results[k+1].smp/x.results[1].smp)") for k ∈ L]
     gsa = geonorm(x.results[1].smp)
-    println(io,"renormalized error bound:")
-    [println(io,"$(n[k]) = $(geonorm(x.results[k+1].smp)/gsa)") for k ∈ L]
-    println(io,"actual error bound:")
-    [println(io,"$(n[k]) = $(x.integral[k]/x.results[1].smp)") for k ∈ L]
+    #println(io,"renormalized error bound:")
+    #[println(io,"$(n[k]) = $(geonorm(x.results[k+1].smp)/gsa)") for k ∈ L]
+    #println(io,"actual error bound:")
+    #[println(io,"$(n[k]) = $(x.integral[k]/x.results[1].smp)") for k ∈ L]
     println(io,"bytes allocated:")
     N = length(x.set)
     [println(io,"$(n[k]) = $(x.results[k+1].stj[2]/N)") for k ∈ L]
-    println(io,(x.results[1].smp, x.results[1].stj[2]/length(x.set)))
+    #println(io,(x.results[1].smp, x.results[1].stj[2]/length(x.set)))
 end
 
 show(io::IO, ::MIME"text/plain", x::PolynomialComparison) = print(io,x)
@@ -97,29 +98,30 @@ function plot(x::PolynomialComparison)
     #(ts, hs, fs) = (ts-fa, hs-fa, fs-fa)
     sc = collect(x.set)
     figure()
+    MS=1
     x.rxtra && plot(sc,x.results[5].stj[1]-x.results[1].stj[1],c="y",lw=0.7)
     plot(sc,x.results[2].stj[1]-x.results[1].stj[1],c="r",lw=0.7)
     plot(sc,x.results[3].stj[1]-x.results[1].stj[1],c="b",lw=0.7)
     plot(sc,x.results[4].stj[1]-x.results[1].stj[1],c="g",lw=0.7)
     leg = ["expand (bound)","horner (bound)","factor (bound)"]
     if x.rxtra
-        plot(sc,x.exact[4]-x.results[1].stj[1],c="y",marker="o",ms=2,ls="--",lw=0.7)
+        plot(sc,x.exact[4]-x.results[1].stj[1],c="y",marker="o",ms=MS,ls="--",lw=0.7)
         pushfirst!(leg,"approx (bound)")
         push!(leg,"approx (actual)")
     end
     if x.extra
         plot(sc,x.results[end].stj[1]-x.results[1].stj[1],c="k",lw=0.7)
-        plot(sc,x.exact[end]-x.results[1].stj[1],c="k",marker="o",ms=2,ls="--",lw=0.7)
+        plot(sc,x.exact[end]-x.results[1].stj[1],c="k",marker="o",ms=MS,ls="--",lw=0.7)
         insert!(leg,1+Int(x.rxtra),"orignal (bound)")
         push!(leg,"original (actual)")
     end
     push!(leg,"expand (actual)","horner (actual)","factor (actual)")
-    plot(sc,x.exact[1]-x.results[1].stj[1],c="r",marker="o",ms=2,ls="--",lw=0.7)
-    plot(sc,x.exact[2]-x.results[1].stj[1],c="b",marker="o",ms=2,ls="--",lw=0.7)
-    plot(sc,x.exact[3]-x.results[1].stj[1],c="g",marker="o",ms=2,ls="--",lw=0.7)
+    plot(sc,x.exact[1]-x.results[1].stj[1],c="r",marker="o",ms=MS,ls="--",lw=0.7)
+    plot(sc,x.exact[2]-x.results[1].stj[1],c="b",marker="o",ms=MS,ls="--",lw=0.7)
+    plot(sc,x.exact[3]-x.results[1].stj[1],c="g",marker="o",ms=MS,ls="--",lw=0.7)
     legend(leg)
     xlabel("\$\\log|x|\$")
-    ylabel("\$\\log\\,|\\frac{[alg(f)](x)-f(x)}{x}|,\\,\\log\\,\\frac{\\delta(f,x,10^{$(Int(ceil(log10(eps()))))})}{\\delta(f,x,10^{$(Int(ceil(log10(eps(BigFloat)))))})}\$")
+    ylabel("\$\\log\\,\\frac{|[alg(f)](x)-f(x)|}{\\delta(f,x,2^{$(Int(log(2,eps(BigFloat))))}},\\,\\log\\,\\frac{\\delta(f,x,2^{$(Int(log(2,eps(x.typ))))})}{\\delta(f,x,2^{$(Int(log(2,eps(BigFloat))))})}\$")
     #=figure()
     (x.results[2].stj[1],x.results[3].stj[1],x.results[4].stj[1]) = (x.results[2].stj[1]-x.results[1].stj[1], x.results[3].stj[1]-x.results[1].stj[1], x.results[4].stj[1]-x.results[1].stj[1])
     plot(sc,x.results[2].stj[1],sc,x.results[3].stj[1],sc,x.results[4].stj[1])

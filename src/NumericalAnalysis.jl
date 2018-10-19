@@ -3,12 +3,27 @@ module NumericalAnalysis
 #   This file is part of NumericalAnalysis.jl. It is licensed under the MIT license
 #   Copyright (C) 2018 Michael Reed
 
-using SyntaxTree, Reduce, NumericalBasis, PyPlot
+using SyntaxTree, Reduce, PyPlot
 import Base: print, show
 import PyPlot: plot
 import Reduce: factor, expand, horner
-import NumericalBasis: polyfactors, polyexpand, polyhorner
+#import NumericalBasis: polyfactors, polyexpand, polyhorner
 export PolynomialAnalysis, PolynomialComparison, plot, factor, expand, horner, polyfactors, polyexpand, polyhorner
+
+function floatset(T::DataType,N;scale=x->x)
+    l = scale(eps(T))
+    u = scale(prevfloat(T(Inf)))
+    return l:(u-l)/(N-1):u
+end
+
+polyhorner(x,a) = polyhorner(x,a,1)
+polyhorner(x,a::Array{<:Any,1},k) = k==length(a) ? a[k] : Algebra.:+(a[k],Algebra.:*(x,polyhorner(x,a,k+1)))
+
+polyfactors(x,a) = polyfactors(x,a,1)
+polyfactors(x,a::Array{<:Any,1},k) = k==length(a) ? Algebra.:-(x,a[k]) : Algebra.:*(Algebra.:-(x,a[k]),polyfactors(x,a,k+1))
+
+polyexpand(x,a) = polyexpand(x,a,length(a))
+polyexpand(x,a::Array{<:Any,1},k) = k==1 ? a[k] : Algebra.:+(Algebra.:*(a[k],Algebra.:^(x,k-1)),polyexpand(x,a,k-1))
 
 geonorm(x) = 1/(1-x)
 

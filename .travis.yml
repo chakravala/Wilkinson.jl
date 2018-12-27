@@ -31,9 +31,9 @@ git:
 
 ## uncomment the following lines to override the default test script
 #script:
-#  - julia -e 'Pkg.clone(pwd()); Pkg.build("NumericalAnalysis"); Pkg.test("NumericalAnalysis"; coverage=true)'
+#  - julia -e 'Pkg.clone(pwd()); Pkg.build("Wilkinson"); Pkg.test("Wilkinson"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'cd(Pkg.dir("NumericalAnalysis")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e 'cd(Pkg.dir("Wilkinson")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("NumericalAnalysis")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'cd(Pkg.dir("Wilkinson")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'

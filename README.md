@@ -1,4 +1,4 @@
-# NumericalAnalysis.jl
+# Wilkinson.jl
 
 [![Build Status](https://travis-ci.org/chakravala/NumericalAnalysis.jl.svg?branch=master)](https://travis-ci.org/chakravala/NumericalAnalysis.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/74nv91cgsv9l9uua?svg=true)](https://ci.appveyor.com/project/chakravala/numericalanalysis-jl)

@@ -1,4 +1,4 @@
-#   This file is part of NumericalAnalysis.jl. It is licensed under the MIT license
+#   This file is part of Wilkinson.jl. It is licensed under the MIT license
 #   Copyright (C) 2018 Michael Reed
 
 struct PolynomialAnalysis <: NumericalData

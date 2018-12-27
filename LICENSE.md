@@ -1,4 +1,4 @@
-The NumericalAnalysis.jl package is licensed under the GNU Public License, Version 3.0+:
+The Wilkinson.jl package is licensed under the GNU Public License, Version 3.0+:
 
 > Copyright (c) 2018:
 >  * Michael Reed

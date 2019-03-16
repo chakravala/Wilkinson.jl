@@ -54,8 +54,8 @@ function Ω(p::Array{<:Number,1})
     return n
 end
 
-genabs(expr,T::DataType) = SyntaxTree.genfun(SyntaxTree.abs(SyntaxTree.sub(T,expr)),[:x])
-genalg(expr,T::DataType) = SyntaxTree.genfun(SyntaxTree.sub(T,expr),[:x])
+genabs(expr,T::DataType) = SyntaxTree.genlatest(SyntaxTree.abs(SyntaxTree.sub(T,expr)),[:x])
+genalg(expr,T::DataType) = SyntaxTree.genlatest(SyntaxTree.sub(T,expr),[:x])
 
 function stieltjes(set::AbstractRange,expr,T::DataType,T2::DataType=T;logi=log,expi=exp)
     t = genabs(expr,T)

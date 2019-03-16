@@ -1,9 +1,9 @@
 # Wilkinson.jl
 
-[![Build Status](https://travis-ci.org/chakravala/NumericalAnalysis.jl.svg?branch=master)](https://travis-ci.org/chakravala/NumericalAnalysis.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/74nv91cgsv9l9uua?svg=true)](https://ci.appveyor.com/project/chakravala/numericalanalysis-jl)
-[![Coverage Status](https://coveralls.io/repos/chakravala/NumericalAnalysis.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/chakravala/NumericalAnalysis.jl?branch=master)
-[![codecov.io](http://codecov.io/github/chakravala/NumericalAnalysis.jl/coverage.svg?branch=master)](http://codecov.io/github/chakravala/NumericalAnalysis.jl?branch=master)
+[![Build Status](https://travis-ci.org/chakravala/Wilkinson.jl.svg?branch=master)](https://travis-ci.org/chakravala/Wilkinson.jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/a1d9jt5ollwat0na/branch/master?svg=true)](https://ci.appveyor.com/project/chakravala/wilkinson-jl)
+[![Coverage Status](https://coveralls.io/repos/chakravala/Wilkinson.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/chakravala/Wilkinson.jl?branch=master)
+[![codecov.io](http://codecov.io/github/chakravala/Wilkinson.jl/coverage.svg?branch=master)](http://codecov.io/github/chakravala/Wilkinson.jl?branch=master)
 
 This package is intended to help provide a complementary detailed analysis of polynomial rounding error estimates using newly defined local and global characteristic methods.
 Using automated testing of different polynomial forms, an optimal expression form can be determined.

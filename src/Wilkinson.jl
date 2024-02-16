@@ -108,4 +108,6 @@ abstract type NumericalData end
 
 include("polynomial.jl")
 
+Reduce.stop()
+
 end # module
